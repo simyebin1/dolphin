@@ -1,4 +1,30 @@
 import streamlit as st
+mentor_data = {
+    "열정송이": {
+        "name": "김송이",
+        "major": "컴퓨터과학과",
+        "student_id": "20학번",
+        "interest": "AI · 웹개발 · 프로젝트"
+    },
+    "새싹송이": {
+        "name": "이송이",
+        "major": "컴퓨터과학과",
+        "student_id": "21학번",
+        "interest": "학교생활 · 수강신청"
+    },
+    "탐구송이": {
+        "name": "박송이",
+        "major": "컴퓨터과학과",
+        "student_id": "19학번",
+        "interest": "AI · 데이터사이언스"
+    },
+    "소통송이": {
+        "name": "최송이",
+        "major": "컴퓨터과학과",
+        "student_id": "22학번",
+        "interest": "동아리 · 인간관계"
+    }
+}
 
 st.set_page_config(
     page_title="선후배 매칭",
@@ -138,12 +164,13 @@ elif st.session_state.page == 6:
 
         st.rerun()
 
+# -------------------
+# 결과 페이지
+# -------------------
+
 elif st.session_state.page == 7:
 
-    # -------------------
     # 유형 판별
-    # -------------------
-
     if st.session_state.answers["Q4"] == "도전형":
         result = "열정송이"
 
@@ -156,81 +183,39 @@ elif st.session_state.page == 7:
     else:
         result = "소통송이"
 
+    # 다음 페이지에서도 사용할 수 있도록 저장
     st.session_state.type = result
+
+    # 유형별 설명
+    descriptions = {
+        "열정송이": "목표가 생기면 끝까지 도전하는 열정적인 유형입니다.",
+        "새싹송이": "새로운 환경에 적응하며 차근차근 성장하는 유형입니다.",
+        "탐구송이": "새로운 기술과 지식을 배우는 것을 좋아하는 유형입니다.",
+        "소통송이": "사람들과 함께 배우고 성장하는 것을 좋아하는 유형입니다."
+    }
 
     st.title("🎉 매칭 결과")
 
-    st.success(f"당신의 유형은 **{result}** 입니다!")
+    st.header(f"당신은 **{result}** 입니다!")
 
-    if result == "열정송이":
-        st.write("목표가 생기면 끝까지 도전하는 열정적인 유형입니다.")
+    st.write(descriptions[result])
 
-    elif result == "새싹송이":
-        st.write("학교생활을 하나씩 배워가며 성장하는 유형입니다.")
+    st.divider()
 
-    elif result == "탐구송이":
-        st.write("새로운 기술을 배우는 것을 좋아하는 유형입니다.")
+    st.subheader("🌱 나와 잘 맞는 선배를 찾았습니다!")
 
-    elif result == "소통송이":
-        st.write("사람들과 함께 성장하는 것을 좋아합니다.")
-
-    if st.button("선배 매칭하기"):
-
-        st.session_state.page = 8
-
-        st.rerun()
-
-elif st.session_state.page == 8:
-
-    mentor_data = {
-
-        "열정송이":{
-            "name":"김송이",
-            "major":"컴퓨터과학과",
-            "student_id":"20학번",
-            "interest":"AI · 웹개발 · 프로젝트"
-        },
-
-        "새싹송이":{
-            "name":"이송이",
-            "major":"컴퓨터과학과",
-            "student_id":"21학번",
-            "interest":"학교생활 · 수강신청"
-        },
-
-        "탐구송이":{
-            "name":"박송이",
-            "major":"컴퓨터과학과",
-            "student_id":"19학번",
-            "interest":"AI · 데이터사이언스"
-        },
-
-        "소통송이":{
-            "name":"최송이",
-            "major":"컴퓨터과학과",
-            "student_id":"22학번",
-            "interest":"동아리 · 인간관계"
-        }
-
-    }
-
-    mentor = mentor_data[st.session_state.type]
-
-    st.title("🎉 매칭 완료!")
+    mentor = mentor_data[result]
 
     st.success(f"{mentor['name']} 선배와 매칭되었습니다!")
 
     st.write(f"**학과** : {mentor['major']}")
-
     st.write(f"**학번** : {mentor['student_id']}")
-
     st.write(f"**관심 분야** : {mentor['interest']}")
 
     if st.button("프로필 보기"):
-
         st.session_state.page = 9
-
         st.rerun()
+
 elif st.session_state.page == 9:
 
     mentor = mentor_data[st.session_state.type]

@@ -2,21 +2,8 @@ import streamlit as st
 
 st.set_page_config(
     page_title="선후배 매칭",
-    page_icon="🌱",
-    layout="wide"
+    layout="centered"
 )
-
-st.title("🌱 선후배 매칭 서비스")
-
-st.markdown("""
-### 환영합니다!
-
-왼쪽 메뉴에서 **매칭 테스트**를 시작해주세요.
-""")
-
-import streamlit as st
-
-st.title("🎯 선후배 매칭 테스트")
 
 if "page" not in st.session_state:
     st.session_state.page = 1
@@ -24,14 +11,12 @@ if "page" not in st.session_state:
 if "answers" not in st.session_state:
     st.session_state.answers = {}
 
-# -------------------
-# Q1
-# -------------------
-
 if st.session_state.page == 1:
 
+    st.title("Q1")
+
     answer = st.radio(
-        "Q1. 어떤 도움을 받고 싶나요?",
+        "어떤 도움을 받고 싶나요?",
         [
             "학교생활",
             "전공",
@@ -41,33 +26,36 @@ if st.session_state.page == 1:
     )
 
     if st.button("다음"):
-        st.session_state.answers["Q1"] = answer
-        st.session_state.page = 2
-        st.rerun()
 
-# -------------------
-# Q1-1
-# -------------------
+        st.session_state.answers["Q1"] = answer
+
+        st.session_state.page = 2
+
+        st.rerun()
 
 elif st.session_state.page == 2:
 
+    st.title("Q1-1")
+
     answer = st.text_area(
-        "Q1-1. 현재 가장 고민되는 것은 무엇인가요?"
+        "현재 가장 고민되는 것은?"
     )
 
     if st.button("다음"):
+
         st.session_state.answers["Q1-1"] = answer
+
         st.session_state.page = 3
+
         st.rerun()
 
-# -------------------
-# Q2
-# -------------------
 
 elif st.session_state.page == 3:
 
+    st.title("Q2")
+
     answer = st.radio(
-        "Q2. 관심 분야는?",
+        "관심 분야는?",
         [
             "AI",
             "웹개발",
@@ -77,39 +65,41 @@ elif st.session_state.page == 3:
     )
 
     if st.button("다음"):
-        st.session_state.answers["Q2"] = answer
-        st.session_state.page = 4
-        st.rerun()
 
-# -------------------
-# Q3
-# -------------------
+        st.session_state.answers["Q2"] = answer
+
+        st.session_state.page = 4
+
+        st.rerun()
 
 elif st.session_state.page == 4:
 
+    st.title("Q3")
+
     answer = st.radio(
-        "Q3. 어떤 선배를 만나고 싶나요?",
+        "어떤 선배를 만나고 싶나요?",
         [
-            "친절한 선배",
-            "꼼꼼한 선배",
-            "친구 같은 선배",
-            "경험이 많은 선배"
+            "친절한",
+            "친구 같은",
+            "경험 많은",
+            "꼼꼼한"
         ]
     )
 
     if st.button("다음"):
-        st.session_state.answers["Q3"] = answer
-        st.session_state.page = 5
-        st.rerun()
 
-# -------------------
-# Q4
-# -------------------
+        st.session_state.answers["Q3"] = answer
+
+        st.session_state.page = 5
+
+        st.rerun()
 
 elif st.session_state.page == 5:
 
+    st.title("Q4")
+
     answer = st.radio(
-        "Q4. 나를 가장 잘 표현하는 것은?",
+        "나의 성향은?",
         [
             "도전형",
             "계획형",
@@ -119,18 +109,19 @@ elif st.session_state.page == 5:
     )
 
     if st.button("다음"):
-        st.session_state.answers["Q4"] = answer
-        st.session_state.page = 6
-        st.rerun()
 
-# -------------------
-# Q5
-# -------------------
+        st.session_state.answers["Q4"] = answer
+
+        st.session_state.page = 6
+
+        st.rerun()
 
 elif st.session_state.page == 6:
 
+    st.title("Q5")
+
     answer = st.radio(
-        "Q5. 멘토링 가능한 시간은?",
+        "멘토링 가능한 시간은?",
         [
             "평일",
             "주말",
@@ -140,46 +131,46 @@ elif st.session_state.page == 6:
     )
 
     if st.button("결과 보기"):
+
         st.session_state.answers["Q5"] = answer
-        st.switch_page("pages/2_결과.py")
 
-import streamlit as st
+        st.session_state.page = 7
 
-st.title("🌱 매칭 결과")
+        st.rerun()
 
-st.header("당신의 유형은")
+elif st.session_state.page == 7:
 
-st.success("🔥 열정송이")
+    st.title("✨ 결과")
 
-st.write("""
-목표를 세우면 끝까지 도전하는 열정적인 유형입니다.
-""")
+    st.success("당신의 유형은 열정송이입니다!")
 
-if st.button("추천 멘토 보기"):
-    st.switch_page("pages/3_멘토목록.py")
+    st.write(
+        "목표를 세우면 끝까지 도전하는 열정적인 유형입니다."
+    )
 
-import streamlit as st
+    if st.button("추천 멘토 보기"):
 
-st.title("추천 멘토")
+        st.session_state.page = 8
 
-col1, col2, col3 = st.columns(3)
+        st.rerun()
 
-with col1:
-    st.image("assets/mentor1.jpg", use_container_width=True)
-    st.subheader("김송이")
-    st.caption("열정송이")
+elif st.session_state.page == 8:
+
+    st.title("추천 멘토")
+
+    st.subheader("👩 김송이")
+
+    st.write("컴퓨터과학과")
+
+    st.write("20학번")
 
     if st.button("프로필 보기"):
-        st.switch_page("pages/4_멘토프로필.py")
 
-import streamlit as st
+        st.session_state.page = 9
 
-col1, col2 = st.columns([1, 2])
+        st.rerun()
 
-with col1:
-    st.image("assets/mentor1.jpg", use_container_width=True)
-
-with col2:
+elif st.session_state.page == 9:
 
     st.title("김송이")
 
@@ -188,19 +179,22 @@ with col2:
     st.write("20학번")
 
     st.write("관심 분야")
-    st.write("AI · 웹개발 · 프로젝트")
 
-    st.write("멘토링 가능 시간")
+    st.write("AI · 웹개발")
+
+    st.write("가능 시간")
+
     st.write("평일 저녁")
 
     if st.button("매칭 신청"):
-        st.switch_page("pages/5_신청완료.py")
 
-import streamlit as st
+        st.session_state.page = 10
 
-st.success("매칭 신청이 완료되었습니다! 🎉")
+        st.rerun()
 
-st.balloons()
+elif st.session_state.page == 10:
 
-st.write("멘토가 수락하면 채팅을 시작할 수 있습니다.")
+    st.success("매칭 신청이 완료되었습니다!")
+
+    st.balloons()
 

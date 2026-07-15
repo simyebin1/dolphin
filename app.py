@@ -206,7 +206,7 @@ elif st.session_state.page == 7:
 
     mentor = mentor_data[result]
 
-    st.success(f"{mentor['name']} 선배와 매칭되었습니다!")
+    st.success(f"{mentor['name']} 선배에게 매칭 신청하시겠습니까?")
 
     st.write(f"**학과** : {mentor['major']}")
     st.write(f"**학번** : {mentor['student_id']}")

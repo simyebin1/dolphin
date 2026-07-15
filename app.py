@@ -242,7 +242,50 @@ elif st.session_state.page == 9:
 
 elif st.session_state.page == 10:
 
-    st.success("매칭 신청이 완료되었습니다!")
+    st.success("✅ 매칭 신청이 완료되었습니다!")
+
+    st.write("선배의 수락을 기다리는 중입니다...")
+
+    if st.button("수락 결과 확인"):
+
+        st.session_state.page = 11
+
+        st.rerun()
+
+elif st.session_state.page == 11:
+
+    mentor = mentor_data[st.session_state.type]
 
     st.balloons()
 
+    st.success(f"🎉 {mentor['name']} 선배가 매칭을 수락했습니다!")
+
+    st.write("이제 채팅을 시작할 수 있습니다.")
+
+    if st.button("채팅 시작하기 💬"):
+
+        st.session_state.page = 12
+
+        st.rerun()
+
+elif st.session_state.page == 12:
+
+    mentor = mentor_data[st.session_state.type]
+
+    st.title("💬 채팅")
+
+    st.info(f"{mentor['name']} 선배와 대화 중")
+
+    st.chat_message("assistant").write(
+        "안녕하세요! 😊 궁금한 것이 있다면 편하게 질문해주세요."
+    )
+
+    message = st.chat_input("메시지를 입력하세요")
+
+    if message:
+
+        st.chat_message("user").write(message)
+
+        st.chat_message("assistant").write(
+            "안녕하세요 ^_^"
+        )

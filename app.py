@@ -140,15 +140,41 @@ elif st.session_state.page == 6:
 
 elif st.session_state.page == 7:
 
-    st.title("✨ 결과")
+    # -------------------
+    # 유형 판별
+    # -------------------
 
-    st.success("당신의 유형은 열정송이입니다!")
+    if st.session_state.answers["Q4"] == "도전형":
+        result = "열정송이"
 
-    st.write(
-        "목표를 세우면 끝까지 도전하는 열정적인 유형입니다."
-    )
+    elif st.session_state.answers["Q1"] == "학교생활":
+        result = "새싹송이"
 
-    if st.button("추천 멘토 보기"):
+    elif st.session_state.answers["Q2"] == "AI":
+        result = "탐구송이"
+
+    else:
+        result = "소통송이"
+
+    st.session_state.type = result
+
+    st.title("🎉 매칭 결과")
+
+    st.success(f"당신의 유형은 **{result}** 입니다!")
+
+    if result == "열정송이":
+        st.write("목표가 생기면 끝까지 도전하는 열정적인 유형입니다.")
+
+    elif result == "새싹송이":
+        st.write("학교생활을 하나씩 배워가며 성장하는 유형입니다.")
+
+    elif result == "탐구송이":
+        st.write("새로운 기술을 배우는 것을 좋아하는 유형입니다.")
+
+    elif result == "소통송이":
+        st.write("사람들과 함께 성장하는 것을 좋아합니다.")
+
+    if st.button("선배 매칭하기"):
 
         st.session_state.page = 8
 
@@ -156,35 +182,72 @@ elif st.session_state.page == 7:
 
 elif st.session_state.page == 8:
 
-    st.title("추천 멘토")
+    mentor_data = {
 
-    st.subheader("👩 김송이")
+        "열정송이":{
+            "name":"김송이",
+            "major":"컴퓨터과학과",
+            "student_id":"20학번",
+            "interest":"AI · 웹개발 · 프로젝트"
+        },
 
-    st.write("컴퓨터과학과")
+        "새싹송이":{
+            "name":"이송이",
+            "major":"컴퓨터과학과",
+            "student_id":"21학번",
+            "interest":"학교생활 · 수강신청"
+        },
 
-    st.write("20학번")
+        "탐구송이":{
+            "name":"박송이",
+            "major":"컴퓨터과학과",
+            "student_id":"19학번",
+            "interest":"AI · 데이터사이언스"
+        },
+
+        "소통송이":{
+            "name":"최송이",
+            "major":"컴퓨터과학과",
+            "student_id":"22학번",
+            "interest":"동아리 · 인간관계"
+        }
+
+    }
+
+    mentor = mentor_data[st.session_state.type]
+
+    st.title("🎉 매칭 완료!")
+
+    st.success(f"{mentor['name']} 선배와 매칭되었습니다!")
+
+    st.write(f"**학과** : {mentor['major']}")
+
+    st.write(f"**학번** : {mentor['student_id']}")
+
+    st.write(f"**관심 분야** : {mentor['interest']}")
 
     if st.button("프로필 보기"):
 
         st.session_state.page = 9
 
         st.rerun()
-
 elif st.session_state.page == 9:
 
-    st.title("김송이")
+    mentor = mentor_data[st.session_state.type]
 
-    st.write("컴퓨터과학과")
+    st.title(mentor["name"])
 
-    st.write("20학번")
+    st.subheader(mentor["major"])
+
+    st.write(mentor["student_id"])
 
     st.write("관심 분야")
 
-    st.write("AI · 웹개발")
+    st.write(mentor["interest"])
 
-    st.write("가능 시간")
+    st.write("### 한마디")
 
-    st.write("평일 저녁")
+    st.info("궁금한 것이 있다면 언제든 편하게 질문해주세요!")
 
     if st.button("매칭 신청"):
 

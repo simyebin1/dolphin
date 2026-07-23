@@ -1,8 +1,8 @@
+import streamlit as st
 import resend
+from supabase import create_client
 
 resend.api_key = st.secrets["RESEND_API_KEY"]
-import streamlit as st
-from supabase import create_client
 
 url = "https://rujorlkjtuiutpsgxgrt.supabase.co"
 key = "sb_publishable_04v1jR8Vn--8KisCrknPEw_veaGfG3a"
@@ -11,7 +11,7 @@ supabase = create_client(url, key)
 def send_match_email(mentor, mentee_email):
     params = {
         "from": "Acme <onboarding@resend.dev>",
-        "to": ["네이메일@gmail.com"],
+        "to": ["syb9134@sookmyung.ac.kr"],
         "subject": "🎉 새로운 매칭 신청",
         "html": f"""
         <h2>새로운 매칭 신청</h2>

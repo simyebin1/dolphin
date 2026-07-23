@@ -1,4 +1,11 @@
 import streamlit as st
+from supabase import create_client
+
+url = "https://rujorlkjtuiutpsgxgrt.supabase.co/rest/v1/"
+key = "sb_publishable_04v1jR8Vn--8KisCrknPEw_veaGfG3a"
+
+supabase = create_client(url, key)
+
 mentor_data = {
     "열정송이": {
         "name": "김송이",

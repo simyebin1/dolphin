@@ -319,22 +319,117 @@ elif st.session_state.page == 11:
 
 elif st.session_state.page == 12:
 
-    mentor = mentor_data[st.session_state.type]
+    mentor = st.session_state.mentor
 
-    st.title("💬 채팅")
+    ###########################
+    # 현재 채팅방 초기화
+    ###########################
+    if "chat_data" not in st.session_state:
+        st.session_state.chat_data = {}
 
-    st.info(f"{mentor['name']} 선배와 대화 중")
+    if mentor["name"] not in st.session_state.chat_data:
+        st.session_state.chat_data[mentor["name"]] = [
+            {
+                "role": "assistant",
+                "content": "🎉 매칭이 완료되었습니다!"
+            },
+            {
+                "role": "assistant",
+                "content": f"안녕하세요 😊 저는 {mentor['name']} 선배입니다. 궁금한 점이 있으면 편하게 질문해주세요!"
+            }
+        ]
 
-    st.chat_message("assistant").write(
-        "안녕하세요! 😊 궁금한 것이 있다면 편하게 질문해주세요."
-    )
+    ###################
+    # 화면 구성
+    ###################
+    left, middle, right = st.columns([3, 3, 5])
 
-    message = st.chat_input("메시지를 입력하세요")
+    ###################
+    # 1. 채팅 목록
+    ###################
+    with left:
 
-    if message:
+        st.subheader("💬 나의 채팅")
 
-        st.chat_message("user").write(message)
-
-        st.chat_message("assistant").write(
-            "안녕하세요 ^_^"
+        st.button(
+            f"👩‍🎓 {mentor['name']}",
+            use_container_width=True
         )
+
+        st.caption(f"{mentor['major']} · {mentor['student_id']}")
+
+        st.divider()
+
+        if st.button("🏠 메인으로", use_container_width=True):
+            st.session_state.page = 1
+            st.rerun()
+
+    ###################
+    # 2. 추천 질문
+    ###################
+    with middle:
+
+        st.subheader("💡 이런 질문은 어때요?")
+
+        topics = [
+            "학교생활이 궁금해요!",
+            "수강신청 팁이 있을까요?",
+            "동아리는 꼭 해야 하나요?",
+            "전공 공부는 어떻게 시작하면 좋을까요?"
+        ]
+
+        for topic in topics:
+
+            if st.button(topic, use_container_width=True):
+
+                st.session_state.chat_data[
+                    mentor["name"]
+                ].append(
+                    {
+                        "role": "user",
+                        "content": topic
+                    }
+                )
+
+                st.rerun()
+
+        st.divider()
+
+        st.caption("추천 질문을 누르면 바로 전송됩니다.")
+
+    ###################
+    # 3. 채팅창
+    ###################
+    with right:
+
+        st.subheader(f"👤 {mentor['name']} 선배")
+
+        messages = st.session_state.chat_data[
+            mentor["name"]
+        ]
+
+        for message in messages:
+
+            with st.chat_message(message["role"]):
+                st.write(message["content"])
+
+        user_input = st.chat_input("메시지를 입력하세요")
+
+        if user_input:
+
+            messages.append(
+                {
+                    "role": "user",
+                    "content": user_input
+                }
+            )
+
+            # 데모용 자동 응답
+            messages.append(
+                {
+                    "role": "assistant",
+                    "content": "좋은 질문이네요! 😊 발표에서는 실제 채팅 대신 데모 응답을 보여드리고 있습니다."
+                }
+            )
+
+            st.rerun()

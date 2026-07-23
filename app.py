@@ -266,26 +266,28 @@ elif st.session_state.page == 9:
             st.rerun()
 
     with col2:
-
         if st.button("매칭 신청"):
+            try:
+                # Supabase에 매칭 신청 저장
+                supabase.table("match_requests").insert({
+                    "mentor_email": mentor["email"],
+                    "mentee_email": "yebin@sook.ac.kr",
+                    "status": "pending"
+                }).execute()
 
-    supabase.table("match_requests").insert({
-        "mentor_email": mentor["email"],
-        "mentee_email": "yebin@sook.ac.kr",
-        "status": "pending"
-    }).execute()
+                # 이메일 전송
+                send_match_email(
+                    mentor,
+                    "yebin@sook.ac.kr"
+                )
 
-    send_match_email(
-        mentor,
-        "yebin@sook.ac.kr"
-    )
+                st.success("매칭 신청이 완료되었습니다! 📩")
 
-    st.session_state.page = 10
-    st.rerun()
+                st.session_state.page = 10
+                st.rerun()
 
             except Exception as e:
-
-                st.error(e)
+                st.error(f"오류가 발생했습니다: {e}")
                 
 elif st.session_state.page == 10:
 

@@ -190,10 +190,9 @@ elif st.session_state.page == 7:
     else:
         result = "소통송이"
 
-    # 다음 페이지에서도 사용할 수 있도록 저장
+    # 결과 저장
     st.session_state.type = result
 
-    # 유형별 설명
     descriptions = {
         "열정송이": "목표가 생기면 끝까지 도전하는 열정적인 유형입니다.",
         "새싹송이": "새로운 환경에 적응하며 차근차근 성장하는 유형입니다.",
@@ -211,41 +210,100 @@ elif st.session_state.page == 7:
 
     st.subheader("🌱 나와 잘 맞는 선배를 찾았습니다!")
 
-    mentor = mentor_data[result]
+    # -------------------------------
+    # Supabase에서 멘토 조회
+    # -------------------------------
+    response = (
+        supabase.table("users")
+        .select("*")
+        .eq("user_type", "mentor")
+        .eq("personality", result)
+        .execute()
+    )
 
-    st.success(f"{mentor['name']} 선배에게 매칭 신청하시겠습니까?")
+    if response.data:
+
+        mentor = response.data[0]
+
+        st.success(f"{mentor['name']} 선배에게 매칭 신청하시겠습니까?")
+
+        st.write(f"**학과** : {mentor['major']}")
+        st.write(f"**학번** : {mentor['student_id']}")
+
+        # 다음 페이지에서도 사용
+        st.session_state.mentor = mentor
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("프로필 보기"):
+                st.session_state.page = 9
+                st.rerun()
+
+        with col2:
+            if st.button("매칭 신청"):
+
+                supabase.table("match_requests").insert({
+
+                    "mentor_email": mentor["email"],
+
+                    "mentee_email": "yebin@sook.ac.kr",
+
+                    "status": "pending"
+
+                }).execute()
+
+                st.success("🎉 매칭 신청이 완료되었습니다!")
+
+    else:
+
+        st.warning("현재 조건에 맞는 선배가 없습니다.")
+elif st.session_state.page == 9:
+
+    mentor = st.session_state.mentor
+
+    st.title("👩‍🎓 선배 프로필")
+
+    st.header(mentor["name"])
 
     st.write(f"**학과** : {mentor['major']}")
     st.write(f"**학번** : {mentor['student_id']}")
-    st.write(f"**관심 분야** : {mentor['interest']}")
+    st.write(f"**이메일** : {mentor['email']}")
 
-    if st.button("프로필 보기"):
-        st.session_state.page = 9
-        st.rerun()
+    st.divider()
 
-elif st.session_state.page == 9:
+    st.subheader("소개")
 
-    mentor = mentor_data[st.session_state.type]
+    st.write(
+        "안녕하세요! 😊\n\n"
+        "후배들과 편하게 소통하고 학교생활, 전공, 진로에 대해 "
+        "도움을 드리고 싶습니다!"
+    )
 
-    st.title(mentor["name"])
+    st.divider()
 
-    st.subheader(mentor["major"])
+    col1, col2 = st.columns(2)
 
-    st.write(mentor["student_id"])
+    with col1:
+        if st.button("← 결과로"):
+            st.session_state.page = 7
+            st.rerun()
 
-    st.write("관심 분야")
+    with col2:
+        if st.button("매칭 신청"):
 
-    st.write(mentor["interest"])
+            supabase.table("match_requests").insert({
 
-    st.write("### 한마디")
+                "mentor_email": mentor["email"],
 
-    st.info("궁금한 것이 있다면 언제든 편하게 질문해주세요!")
+                "mentee_email": "yebin@sook.ac.kr",   # 테스트용
 
-    if st.button("매칭 신청"):
+                "status": "pending"
 
-        st.session_state.page = 10
+            }).execute()
 
-        st.rerun()
+            st.success("🎉 매칭 신청이 완료되었습니다!")
+
 
 elif st.session_state.page == 10:
 
